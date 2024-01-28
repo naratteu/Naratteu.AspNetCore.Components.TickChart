@@ -29,7 +29,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Naratteu Test
       - run: echo "env_url=$url" >> $GITHUB_OUTPUT
       - run: echo "page_url=${{ steps.deployment.outputs.page_url }}" >> $GITHUB_OUTPUT
       - name: Checkout
