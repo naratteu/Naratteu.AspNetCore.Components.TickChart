@@ -1,9 +1,32 @@
 ﻿@using Naratteu.AspNetCore.Components.TickChart
 @page "/"
+@implements IDisposable
+
+@code{
+    List<int> list = [1, 2, 3, 4, 5, 6];
+    bool add;
+    PeriodicTimer timer = new(TimeSpan.FromSeconds(0.1));
+    protected override async void OnInitialized()
+    {
+        while (await timer.WaitForNextTickAsync())
+        {
+            if(add)
+            {
+                list.Add(list[^5] + 1);
+                while (list.Count > 50)
+                    list.RemoveAt(0);
+                StateHasChanged();
+            }
+        }
+    }
+    void IDisposable.Dispose() => timer.Dispose();
+}
+
+<label>add : <input type="checkbox" @bind=add/></label>
 
 <h1>Hello, TickBar!</h1>
 
-<TickBar Items=@(new []{1,2,3,4,5,6,2,3,4,5,6,7,3,4,5,6,7,8}.Select((v,i)=>(v,i))) Area="iv => (iv.i,iv.i+1)" style="resize:both;overflow:hidden; border: 1px solid black;">
+<TickBar Items=@list.Select((v,i)=>(v,i)) Area="iv => (iv.i,iv.i+1)" style="resize:both;overflow:hidden; border: 1px solid black;">
     <BarItem Range='iv=>(iv.v,iv.v+1)' class="sup" />
     <BarItem Range='iv=>(iv.v-1,iv.v)' class="sub"><span>v : @context.v</span></BarItem>
 </TickBar>
@@ -25,3 +48,10 @@
         visibility: hidden;
     }
 </style>
+
+<h1>Hello, TickLine!</h1>
+
+<TickLine Items=@list.Select((v,i)=>(v,i)) Area="iv => iv.i" style="resize:both;overflow:hidden; border: 1px solid black;">
+    <LineItem Pos='iv=>iv.v' />
+    <LineItem Pos='iv=>iv.v + 3' />
+</TickLine>

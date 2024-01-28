@@ -1,0 +1,8 @@
+﻿@typeparam V
+@code {
+    [CascadingParameter] TickLine<V>? Base { get; init; }
+    [Parameter] public required Func<V, Int128> Pos { get; init; }
+}
+@{
+    Base?.Join(this);
+}

@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGridCopy.Infrastructure
+@typeparam V
+@attribute [CascadingTypeParameter(nameof(V))]
+@using INT = Int128;
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attrs { get; init; }
+    [Parameter] public required IEnumerable<V> Items { get; init; }
+    [Parameter] public required Func<V, INT> Area { get; init; }
+    [Parameter] public required RenderFragment ChildContent { get; init; }
+
+    readonly HashSet<LineItem<V>> member = new();
+    public void Join(LineItem<V> m)
+    {
+        if (member.Add(m))
+            defer?.StateHasChanged();
+    }
+    Defer? defer;
+}
+@{
+    member.Clear();
+    int hash = GetHashCode();
+}
+<div tickline=@hash @attributes=Attrs>
+    <CascadingValue Value=this IsFixed=true ChildContent=ChildContent />
+    <Defer @ref=defer>
+        @if (Items.Any() && member.Any())
+        {
+            var a = from i in Items
+                    select Area(i);
+            var p = from i in Items
+                    from m in member
+                    select m.Pos(i);
+
+            var ap = from i in Items
+                     from m in member
+                     select (a: Area(i), p: m.Pos(i));
+
+            var (amin, pmin) = (a.Min(), p.Min());
+            <svg width="100%" height="100%" viewBox="@amin @pmin @(a.Max() - amin) @(p.Max() - pmin)" preserveAspectRatio="none">
+                @foreach (var m in member)
+                {
+                    <path class="line" d=@ss() />
+                    string ss()
+                    {
+                        var f = Items.First();
+                        return $"M {Area(f)},{m.Pos(f)} L {string.Join(' ', Items.Skip(1).Select(i => $"{Area(i)},{m.Pos(i)}"))}";
+                    }
+                }
+                @foreach (var (aa, pp) in ap)
+                {
+                    <path class="dot" d="M @aa,@pp l 0,0" />
+                }
+            </svg>
+        }
+    </Defer>
+</div>
