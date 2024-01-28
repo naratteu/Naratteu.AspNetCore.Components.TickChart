@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Label="T4">
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <Compile Update="Defer.cs" DesignTime="True" AutoGen="True" DependentUpon="Defer.tt" />
+    <None Update="Defer.tt" Generator="TextTemplatingFileGenerator" LastGenOutput="Defer.cs" />
+  </ItemGroup>
+
+</Project>
