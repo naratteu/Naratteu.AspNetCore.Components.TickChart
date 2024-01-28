@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGridCopy.Infrastructure
+@typeparam V
+@attribute [CascadingTypeParameter(nameof(V))]
+@using INT = Int128;
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attrs { get; init; }
+    [Parameter] public required IEnumerable<V> Items { get; init; }
+    [Parameter] public required Func<V, (INT pre, INT post)> Area { get; init; }
+    [Parameter] public required RenderFragment ChildContent { get; init; }
+
+    (INT min, INT max)? tt, vv;
+    internal INT t { set => Join(ref tt, value); }
+    internal INT v { set => Join(ref vv, value); }
+    void Join(ref (INT min, INT max)? tgt, INT i)
+    {
+        var (min, max) = tgt ?? (i, i);
+        tgt = (INT.Min(min, i), INT.Max(max, i));
+        defer?.StateHasChanged();
+    }
+    Defer? defer;
+}
+<div tickbar=@GetHashCode() @attributes=Attrs>
+    @if (Items.Any())
+    {
+        tt = vv = null;
+        <CascadingValue Value=this IsFixed=true>
+            @foreach (var d in Items)
+            {
+                var (pre, post) = (t, t) = Area(d);
+                <div area style='--t:@pre;--tt:@post;'>
+                    <CascadingValue Value=d ChildContent=ChildContent />
+                </div>
+            }
+            <Defer @ref=defer>
+                <style>
+                    [tickbar="@this.GetHashCode()"] {
+                        --t-min: @tt?.min;
+                        --t-max: @tt?.max;
+                        --v-min: @vv?.min;
+                        --v-max: @vv?.max;
+                    }
+                </style>
+            </Defer>
+        </CascadingValue>
+    }
+</div>

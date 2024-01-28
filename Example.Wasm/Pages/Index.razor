@@ -1,0 +1,27 @@
+﻿@using Naratteu.AspNetCore.Components.TickChart
+@page "/"
+
+<h1>Hello, TickBar!</h1>
+
+<TickBar Items=@(new []{1,2,3,4,5,6,2,3,4,5,6,7,3,4,5,6,7,8}.Select((v,i)=>(v,i))) Area="iv => (iv.i,iv.i+1)" style="resize:both;overflow:hidden; border: 1px solid black;">
+    <BarItem Range='iv=>(iv.v,iv.v+1)' class="sup" />
+    <BarItem Range='iv=>(iv.v-1,iv.v)' class="sub"><span>v : @context.v</span></BarItem>
+</TickBar>
+
+<style>
+    .sup {
+        background: yellow;
+    }
+
+    .sub {
+        white-space: nowrap
+    }
+
+    .sub * {
+        background: white;
+    }
+
+    .sub:not(:hover) * {
+        visibility: hidden;
+    }
+</style>

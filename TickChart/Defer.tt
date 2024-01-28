@@ -1,0 +1,5 @@
+<#
+	using var client = new System.Net.WebClient { Encoding = System.Text.Encoding.UTF8 };
+	const string url = "https://raw.githubusercontent.com/dotnet/aspnetcore/bd016947b6928159814950c06a6e2278be7a256f/src/Components/QuickGrid/Microsoft.AspNetCore.Components.QuickGrid/src/Infrastructure/Defer.cs";
+#>
+<#= client.DownloadString(url).Replace(".QuickGrid.", ".QuickGridCopy.").Replace(" sealed "," partial ") #>

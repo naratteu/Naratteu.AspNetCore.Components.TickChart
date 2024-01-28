@@ -1,0 +1,16 @@
+﻿@typeparam V
+@code {
+    [CascadingParameter] TickBar<V>? Base { get; init; }
+    [CascadingParameter] V? Data { get; init; }
+
+    [Parameter] public Func<V, (Int128 ground, Int128 point)>? Range { get; init; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attrs { get; init; }
+    [Parameter] public RenderFragment<V>? ChildContent { get; init; }
+}
+@if (this is { Base: { } b, Data: { } d })
+{
+    var (g, p) = Range?.Invoke(d) is { } gp ? (b.v, b.v) = gp : default;
+    <div style='--v:@g;--vv:@p;'>
+        <div bar-item @attributes=Attrs>@ChildContent?.Invoke(d)</div>
+    </div>
+}

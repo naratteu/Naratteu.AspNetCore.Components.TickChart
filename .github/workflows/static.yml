@@ -29,6 +29,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - run : echo echoecho >> ./index.html
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages

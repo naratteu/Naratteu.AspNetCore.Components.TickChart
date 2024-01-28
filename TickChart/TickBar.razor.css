@@ -1,0 +1,15 @@
+﻿[tickbar] {
+    position: relative;
+    height: 25vh;
+}
+
+::deep[tickbar] [bar-item] {
+    position: absolute;
+    border: 1px solid black;
+    --t-len: calc(var(--t-max) - var(--t-min));
+    left: calc((var(--t) - var(--t-min)) / var(--t-len) * 100%);
+    right: calc((var(--t-max) - var(--tt)) / var(--t-len) * 100%);
+    --v-len: calc((var(--v-max) - var(--v-min)));
+    bottom: calc((var(--v) - var(--v-min)) / var(--v-len) * 100%);
+    top: calc((var(--v-max) - var(--vv)) / var(--v-len) * 100%);
+}
