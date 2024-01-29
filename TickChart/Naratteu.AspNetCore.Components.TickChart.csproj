@@ -10,6 +10,16 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
+  <PropertyGroup Label="Nuget_Publish">
+    <IsPackable>true</IsPackable>
+    <Version>0.0.1-beta</Version>
+    <RepositoryUrl>https://github.com/naratteu/Naratteu.AspNetCore.Components.TickChart</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup Label="Nuget_Publish">
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.1" />
   </ItemGroup>
